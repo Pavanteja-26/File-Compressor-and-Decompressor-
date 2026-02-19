@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Compressor and Decompressor</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <span class="logo">ZipMaster</span>
+        <nav>
+            <a href="#compress-section">Compress</a>
+            <a href="#decompress-section">Decompress</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <h1>Compress and Decompress Files</h1>
+        <p>Upload any file to zip it, or drop a .zip to extract it.</p>
+    </section>
+
+    <!-- Error message from server -->
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+
+    <section class="features">
+        <div class="feature-card">
+            <span class="icon">&#9889;</span>
+            <h3>Fast</h3>
+            <p>Powered by Java DEFLATE algorithm</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">&#128274;</span>
+            <h3>Secure</h3>
+            <p>Files processed locally on server</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">&#128202;</span>
+            <h3>Stats</h3>
+            <p>See compression ratio and time taken</p>
+        </div>
+    </section>
+
+    <!-- COMPRESS FORM -->
+    <!-- FIX: method="post" and enctype="multipart/form-data" are both required -->
+    <section class="card" id="compress-section">
+        <h2>Compress a File</h2>
+        <p class="subtitle">Upload any file and get a .zip archive</p>
+
+        <form method="post" action="/compress" enctype="multipart/form-data">
+            <div class="drop-zone" id="compress-drop">
+                <span class="drop-icon">&#128194;</span>
+                <p>Drag and drop file here, or click to browse</p>
+                <!-- FIX: name="file" must match @RequestParam("file") in controller -->
+                <label class="file-btn">
+                    Choose File
+                    <input type="file" name="file" id="compress-input" required />
+                </label>
+                <p class="file-name" id="compress-name">No file selected</p>
+            </div>
+            <button type="submit" class="btn btn-primary" id="compress-btn">Compress Now</button>
+        </form>
+    </section>
+
+    <!-- DECOMPRESS FORM -->
+    <section class="card" id="decompress-section">
+        <h2>Decompress a ZIP File</h2>
+        <p class="subtitle">Upload a .zip file and extract its contents</p>
+
+        <form method="post" action="/decompress" enctype="multipart/form-data">
+            <div class="drop-zone" id="decompress-drop">
+                <span class="drop-icon">&#128452;</span>
+                <p>Drag and drop .zip here, or click to browse</p>
+                <!-- FIX: name="file" must match @RequestParam("file") in controller -->
+                <label class="file-btn">
+                    Choose ZIP File
+                    <input type="file" name="file" id="decompress-input" accept=".zip" required />
+                </label>
+                <p class="file-name" id="decompress-name">No file selected</p>
+            </div>
+            <button type="submit" class="btn btn-secondary" id="decompress-btn">Decompress Now</button>
+        </form>
+    </section>
+</main>
+
+<footer>
+    <p>Built with Java + Spring Boot | ElevateLabs Internship 2025</p>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

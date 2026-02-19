@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Result - ZipMaster</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <span class="logo">ZipMaster</span>
+        <nav><a href="/">Home</a></nav>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <h1 th:if="${stats.success}">Success!</h1>
+        <h1 th:unless="${stats.success}">Something went wrong</h1>
+        <p th:text="${stats.message}"></p>
+    </section>
+
+    <section class="card result-card" th:if="${stats.success}">
+        <h2>Compression Stats</h2>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <span class="stat-label">Original File</span>
+                <span class="stat-value" th:text="${stats.originalFileName}">-</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Original Size</span>
+                <span class="stat-value" th:text="${stats.originalSizeFormatted}">-</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label" th:text="${mode == 'compress'} ? 'Compressed Size' : 'Extracted Size'">Size</span>
+                <span class="stat-value" th:text="${stats.compressedSizeFormatted}">-</span>
+            </div>
+            <div class="stat-box highlight" th:if="${mode == 'compress'}">
+                <span class="stat-label">Space Saved</span>
+                <span class="stat-value" th:text="${stats.compressionRatio + '%'}">-</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Time Taken</span>
+                <span class="stat-value" th:text="${stats.timeTakenMs + ' ms'}">-</span>
+            </div>
+        </div>
+
+        <div class="ratio-bar-wrapper" th:if="${mode == 'compress'}">
+            <label>Compression Ratio</label>
+            <div class="ratio-bar">
+                <div class="ratio-fill" th:attr="data-width=${stats.compressionRatio}"></div>
+            </div>
+            <span th:text="${stats.compressionRatio + '% space saved'}"></span>
+        </div>
+
+        <!--
+            FIX: Build the download URL manually using Thymeleaf string concat.
+            th:href with @{} was double-encoding the filename causing 500 errors.
+        -->
+        <a class="btn btn-primary"
+           th:href="${'/download?file=' + stats.outputFileName + '&mode=' + mode}">
+            Download
+            <span th:text="${mode == 'compress'} ? 'ZIP File' : 'Extracted Files'">File</span>
+        </a>
+
+        <a href="/" class="btn btn-outline">Process Another File</a>
+    </section>
+
+    <section class="card" th:unless="${stats.success}">
+        <div class="alert error" th:text="${stats.message}"></div>
+        <a href="/" class="btn btn-outline">Go Back</a>
+    </section>
+</main>
+
+<footer>
+    <p>Built with Java + Spring Boot | ElevateLabs Internship 2025</p>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
